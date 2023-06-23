@@ -5,7 +5,7 @@
 ## Directorios
 
 ### 1. Ejercicios de Java
-En este directorio encontrarás una serie de ejercicios de programación en Java que cubren diversos temas, incluyendo concurrencia. Estos ejercicios te permitirán practicar tus habilidades de programación y aplicar los conceptos que aprenderás en los demás directorios.
+En este directorio encontrarás una serie de ejercicios de programación en Java que cubren diversos temas. Estos ejercicios te permitirán practicar tus habilidades de programación y aplicar los conceptos que aprenderás en los demás directorios.
 
 ### 2. Hilos
 El directorio "Hilos" contiene ejemplos y explicaciones sobre el uso de hilos en Java. Aprenderás cómo crear y controlar hilos, sincronizar su ejecución y manejar problemas comunes asociados con la concurrencia.
