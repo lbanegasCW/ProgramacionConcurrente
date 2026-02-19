@@ -2,6 +2,9 @@ package Colas.ProductorConsumidor;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
+/**
+ * Consumidor del patrón Productor-Consumidor usando ArrayBlockingQueue. Toma elementos bloqueando cuando la cola está vacía.
+ */
 class Consumidor implements Runnable {
     private ArrayBlockingQueue<String> cola;
 

@@ -1,5 +1,8 @@
 package Mutex;
 
+/**
+ * Recurso compartido protegido con synchronized para evitar condiciones de carrera al actualizar movimientos.
+ */
 class SharedMemory {
     private Integer movements;
 

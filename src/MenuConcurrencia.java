@@ -1,139 +1,70 @@
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.Scanner;
 
 /**
- * Lanzador en consola para ejecutar las demos de concurrencia del repositorio.
- *
- * Uso:
- * 1) javac $(find src -name "*.java")
- * 2) java -cp src MenuConcurrencia
+ * Menú de consola centralizado para ejecutar todas las demos del repositorio y mostrar su explicación teórica.
  */
 public class MenuConcurrencia {
-    private static final Map<Integer, OpcionDemo> OPCIONES = new LinkedHashMap<>();
-
-    static {
-        // HILOS: cada tarea corre en su propio Thread/Runnable.
-        OPCIONES.put(1, new OpcionDemo(
-                "Hilos: Números pares e impares",
-                "Hilos.NumeroParImpar",
-                "Teoría: un hilo es una unidad de ejecución dentro de un proceso. " +
-                        "Permite trabajo concurrente, pero si comparten estado hay riesgo de race conditions."));
-
-        OPCIONES.put(2, new OpcionDemo(
-                "Hilos: Valores compartidos con Runnable",
-                "Hilos.ValoresHilo",
-                "Teoría: Runnable separa la lógica del hilo. Es más flexible para reutilizar código y combinarlo con pools."));
-
-        OPCIONES.put(3, new OpcionDemo(
-                "Hilos: Valores compartidos con Thread",
-                "Hilos.ValoresHiloThread",
-                "Teoría: extender Thread es directo para ejemplos simples, pero acopla la tarea al mecanismo de ejecución."));
-
-        // MUTEX: exclusión mutua para secciones críticas.
-        OPCIONES.put(4, new OpcionDemo(
-                "Mutex: Exclusión mutua en memoria compartida",
-                "Mutex.Mutex",
-                "Teoría: un mutex permite que solo un hilo entre a la sección crítica. " +
-                        "Evita corrupción de datos compartidos."));
-
-        // MONITORES: sincronización + wait/notify sobre un objeto monitor.
-        OPCIONES.put(5, new OpcionDemo(
-                "Monitores: Productor/Consumidor",
-                "Monitores.ProductorConsumidor.Main",
-                "Teoría: un monitor combina exclusión mutua y coordinación de estados con wait/notify."));
-
-        OPCIONES.put(6, new OpcionDemo(
-                "Monitores: Carrera de relevos",
-                "Monitores.CarreraRelevos.Main",
-                "Teoría: los monitores permiten turnos ordenados entre hilos sin sondeo activo constante."));
-
-        // COLAS CONCURRENTES: desacoplan productores y consumidores.
-        OPCIONES.put(7, new OpcionDemo(
-                "Colas: Productor/Consumidor con ArrayBlockingQueue",
-                "Colas.ProductorConsumidor.Main",
-                "Teoría: BlockingQueue bloquea automáticamente cuando está vacía/llena y simplifica la coordinación."));
-
-        OPCIONES.put(8, new OpcionDemo(
-                "Colas: Productor/Consumidor con Buffer propio",
-                "Colas.ProductorConsumidorBuffer.Main",
-                "Teoría: un buffer manual muestra la sincronización explícita y ayuda a entender la base del patrón."));
-
-        OPCIONES.put(9, new OpcionDemo(
-                "Colas: Productor/Consumidor con Exchanger",
-                "Colas.ProductorConsumidorExchanger.Main",
-                "Teoría: Exchanger sincroniza a dos hilos para intercambiar datos punto a punto."));
-
-        // SEMÁFOROS: control por permisos, útil para recursos limitados.
-        OPCIONES.put(10, new OpcionDemo(
-                "Semáforos: Cena de los filósofos",
-                "Semaforos.CenaFilosofos",
-                "Teoría: Semaphore usa permisos (acquire/release) para limitar accesos simultáneos a recursos."));
-
-        // EXECUTOR SERVICE: administración de tareas con pool de hilos.
-        OPCIONES.put(11, new OpcionDemo(
-                "ExecutorService: Suma de números aleatorios",
-                "ExecutorService.RandomNumberSum",
-                "Teoría: ExecutorService reutiliza hilos en un pool; mejora control de recursos y escalabilidad."));
-
-        // Ejercicios base complementarios.
-        OPCIONES.put(12, new OpcionDemo("Java básico: Calculadora multihilo", "Java.Calculadora",
-                "Apoyo: ejemplo base para practicar descomposición de tareas."));
-        OPCIONES.put(13, new OpcionDemo("Java básico: Sumador con array", "Java.SumadorConArray",
-                "Apoyo: ejemplo base para practicar división de trabajo sobre datos."));
-        OPCIONES.put(14, new OpcionDemo("Java básico: Suma de pares e impares", "Java.SumaParesImpares",
-                "Apoyo: ejemplo base para validar lógica antes de sincronizar recursos compartidos."));
-    }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
             imprimirMenu();
-            System.out.print("Selecciona una opción: ");
-            String entrada = scanner.nextLine();
+            OpcionMenu opcion = leerOpcion(scanner);
 
-            int opcion;
-            try {
-                opcion = Integer.parseInt(entrada);
-            } catch (NumberFormatException e) {
-                System.out.println("⚠️ Entrada inválida. Debes ingresar un número.\n");
-                continue;
-            }
-
-            if (opcion == 0) {
+            if (opcion == OpcionMenu.SALIR) {
                 System.out.println("¡Hasta luego!");
-                break;
+                return;
             }
 
-            OpcionDemo demo = OPCIONES.get(opcion);
-            if (demo == null) {
-                System.out.println("⚠️ Opción no válida. Intenta nuevamente.\n");
-                continue;
-            }
-
-            ejecutarDemo(demo);
+            ejecutar(opcion);
         }
     }
 
     private static void imprimirMenu() {
         System.out.println("\n================ MENÚ DE CONCURRENCIA ================");
         System.out.println("Ejecuta con: java -cp src MenuConcurrencia");
-        for (Map.Entry<Integer, OpcionDemo> entrada : OPCIONES.entrySet()) {
-            System.out.printf("%2d. %s%n", entrada.getKey(), entrada.getValue().nombre());
+
+        for (OpcionMenu opcion : OpcionMenu.values()) {
+            if (opcion == OpcionMenu.SALIR) {
+                continue;
+            }
+            System.out.printf("%2d. %s%n", opcion.numero(), opcion.titulo());
         }
+
         System.out.println(" 0. Salir");
         System.out.println("=======================================================");
     }
 
-    private static void ejecutarDemo(OpcionDemo demo) {
-        System.out.println("\n▶ " + demo.nombre());
-        System.out.println(demo.teoria());
+    private static OpcionMenu leerOpcion(Scanner scanner) {
+        while (true) {
+            System.out.print("Selecciona una opción: ");
+            String entrada = scanner.nextLine();
+
+            try {
+                int numero = Integer.parseInt(entrada);
+                Optional<OpcionMenu> opcion = OpcionMenu.desdeNumero(numero);
+                if (opcion.isPresent()) {
+                    return opcion.get();
+                }
+                System.out.println("⚠️ Opción no válida. Intenta nuevamente.\n");
+            } catch (NumberFormatException e) {
+                System.out.println("⚠️ Entrada inválida. Debes ingresar un número.\n");
+            }
+        }
+    }
+
+    private static void ejecutar(OpcionMenu opcion) {
+        System.out.println("\n▶ " + opcion.titulo());
+        System.out.println(opcion.teoria());
         System.out.println("(Si la demo queda en ejecución continua, deténla con Ctrl+C)\n");
 
         try {
-            Class<?> clase = Class.forName(demo.clasePrincipal());
-            var main = clase.getDeclaredMethod("main", String[].class);
+            Class<?> clase = Class.forName(opcion.clasePrincipal());
+            Method main = clase.getDeclaredMethod("main", String[].class);
             main.setAccessible(true);
             main.invoke(null, (Object) new String[]{});
         } catch (Exception e) {
@@ -142,6 +73,72 @@ public class MenuConcurrencia {
         }
     }
 
-    private record OpcionDemo(String nombre, String clasePrincipal, String teoria) {
+    /**
+     * Opciones disponibles del menú con número, título, clase principal y teoría asociada.
+     */
+    private enum OpcionMenu {
+        SALIR(0, "Salir", "", ""),
+        HILOS_PAR_IMPAR(1, "Hilos: Números pares e impares", "Hilos.NumeroParImpar",
+                "Teoría: dos hilos ejecutan trabajo en paralelo lógico y comparten CPU por planificación."),
+        HILOS_RUNNABLE(2, "Hilos: Valores compartidos con Runnable", "Hilos.ValoresHilo",
+                "Teoría: Runnable separa la tarea del hilo, mejorando reutilización y testeo."),
+        HILOS_THREAD(3, "Hilos: Valores compartidos con Thread", "Hilos.ValoresHiloThread",
+                "Teoría: extender Thread simplifica ejemplos, pero acopla la lógica al mecanismo de ejecución."),
+        MUTEX(4, "Mutex: Exclusión mutua en memoria compartida", "Mutex.Mutex",
+                "Teoría: la exclusión mutua evita condiciones de carrera en secciones críticas."),
+        MONITOR_PRODUCTOR_CONSUMIDOR(5, "Monitores: Productor/Consumidor", "Monitores.ProductorConsumidor.Main",
+                "Teoría: un monitor combina synchronized con wait/notify para coordinar estados."),
+        MONITOR_CARRERA_RELEVOS(6, "Monitores: Carrera de relevos", "Monitores.CarreraRelevos.Main",
+                "Teoría: el monitor define turnos y orden de ejecución entre hilos."),
+        COLA_ARRAY_BLOCKING_QUEUE(7, "Colas: Productor/Consumidor con ArrayBlockingQueue", "Colas.ProductorConsumidor.Main",
+                "Teoría: BlockingQueue bloquea automáticamente productores/consumidores según capacidad."),
+        COLA_BUFFER_PROPIO(8, "Colas: Productor/Consumidor con Buffer propio", "Colas.ProductorConsumidorBuffer.Main",
+                "Teoría: implementar buffer manual ayuda a comprender la coordinación con monitores."),
+        COLA_EXCHANGER(9, "Colas: Productor/Consumidor con Exchanger", "Colas.ProductorConsumidorExchanger.Main",
+                "Teoría: Exchanger sincroniza dos hilos para intercambio directo de datos."),
+        SEMAFOROS_FILOSOFOS(10, "Semáforos: Cena de los filósofos", "Semaforos.CenaFilosofos",
+                "Teoría: Semaphore modela permisos para limitar acceso concurrente a recursos."),
+        EXECUTOR_SERVICE(11, "ExecutorService: Suma de números aleatorios", "ExecutorService.RandomNumberSum",
+                "Teoría: ExecutorService administra un pool y reduce el costo de crear hilos."),
+        JAVA_CALCULADORA(12, "Java básico: Calculadora multihilo", "Java.Calculadora",
+                "Apoyo: ejemplo base para organizar tareas que luego pueden paralelizarse."),
+        JAVA_SUMADOR_ARRAY(13, "Java básico: Sumador con array", "Java.SumadorConArray",
+                "Apoyo: ejercicio para practicar descomposición de datos y resultados."),
+        JAVA_PARES_IMPARES(14, "Java básico: Suma de pares e impares", "Java.SumaParesImpares",
+                "Apoyo: base para separar trabajo antes de aplicar sincronización.");
+
+        private final int numero;
+        private final String titulo;
+        private final String clasePrincipal;
+        private final String teoria;
+
+        OpcionMenu(int numero, String titulo, String clasePrincipal, String teoria) {
+            this.numero = numero;
+            this.titulo = titulo;
+            this.clasePrincipal = clasePrincipal;
+            this.teoria = teoria;
+        }
+
+        public int numero() {
+            return numero;
+        }
+
+        public String titulo() {
+            return titulo;
+        }
+
+        public String clasePrincipal() {
+            return clasePrincipal;
+        }
+
+        public String teoria() {
+            return teoria;
+        }
+
+        public static Optional<OpcionMenu> desdeNumero(int numero) {
+            return Arrays.stream(values())
+                    .filter(opcion -> opcion.numero == numero)
+                    .findFirst();
+        }
     }
 }

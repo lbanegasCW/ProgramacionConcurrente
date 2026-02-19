@@ -1,5 +1,8 @@
 package Monitores.CarreraRelevos;
 
+/**
+ * Punto de entrada del ejemplo de monitores aplicado a una carrera de relevos.
+ */
 public class Main {
     public static void main(String[] args) {
         int numCorredores = 4;

@@ -2,6 +2,9 @@ package Java;
 
 import java.util.Scanner;
 
+/**
+ * Ejercicio base de suma sobre arreglos para reforzar lógica previa a sincronización concurrente.
+ */
 public class SumadorConArray {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);

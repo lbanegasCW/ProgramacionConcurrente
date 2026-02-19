@@ -1,5 +1,8 @@
 package Colas.ProductorConsumidorBuffer;
 
+/**
+ * Buffer compartido implementado con monitor (synchronized + wait/notifyAll) para coordinar productor y consumidor.
+ */
 class Buffer {
     private int[] buffer;
     private int size;

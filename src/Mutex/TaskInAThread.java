@@ -1,5 +1,8 @@
 package Mutex;
 
+/**
+ * Hilo de trabajo que ejecuta movimientos sobre SharedMemory para demostrar la protección por mutex.
+ */
 class TaskInAThread extends Thread {
     private SharedMemory sharedMemory;
     private String nombreHilo;

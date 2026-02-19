@@ -1,5 +1,8 @@
 package Monitores.CarreraRelevos;
 
+/**
+ * Monitor que coordina la carrera de relevos controlando turnos de corredores con exclusión mutua.
+ */
 class Carrera {
     private int numCorredores;
     private Object monitor;

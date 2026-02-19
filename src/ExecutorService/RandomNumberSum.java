@@ -7,6 +7,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Ejemplo de uso de ExecutorService con pool fijo para ejecutar tareas concurrentes sobre una lista compartida.
+ */
 public class RandomNumberSum {
     private static int tamPool = 5;
 

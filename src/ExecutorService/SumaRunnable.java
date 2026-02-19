@@ -2,6 +2,9 @@ package ExecutorService;
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * Tarea Runnable que toma dos números de una lista compartida, los suma y reinserta el resultado.
+ */
 class SumaRunnable implements Runnable {
     private List<Integer> numeros;
 

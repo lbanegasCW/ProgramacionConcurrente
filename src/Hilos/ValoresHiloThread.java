@@ -1,5 +1,8 @@
 package Hilos;
 
+/**
+ * Ejemplo de concurrencia extendiendo Thread para comparar este enfoque con Runnable.
+ */
 public class ValoresHiloThread extends Thread {
     private final String nombre;
     private final int valor;

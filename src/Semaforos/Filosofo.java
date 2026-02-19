@@ -2,6 +2,9 @@ package Semaforos;
 
 import java.util.concurrent.Semaphore;
 
+/**
+ * Comportamiento de un filósofo: alterna pensar/comer y usa semáforos para adquirir/liberar tenedores.
+ */
 class Filosofo implements Runnable {
     private final int id;
     private final Semaphore tenedorIzquierdo;

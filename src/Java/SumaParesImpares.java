@@ -2,6 +2,9 @@ package Java;
 
 import java.util.Scanner;
 
+/**
+ * Ejercicio base que divide el cálculo de pares e impares para practicar separación de trabajo.
+ */
 public class SumaParesImpares {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
