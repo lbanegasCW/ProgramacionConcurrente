@@ -24,9 +24,11 @@ public class MenuConcurrencia {
         }
     }
 
+    /**
+     * Ejecuta con: java -cp src MenuConcurrencia
+     */
     private static void imprimirMenu() {
         System.out.println("\n================ MENÚ DE CONCURRENCIA ================");
-        System.out.println("Ejecuta con: java -cp src MenuConcurrencia");
 
         for (OpcionMenu opcion : OpcionMenu.values()) {
             if (opcion == OpcionMenu.SALIR) {
