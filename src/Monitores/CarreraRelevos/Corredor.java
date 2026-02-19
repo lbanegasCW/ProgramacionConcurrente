@@ -1,5 +1,8 @@
 package Monitores.CarreraRelevos;
 
+/**
+ * Hilo corredor que participa en la carrera respetando el orden definido por el monitor Carrera.
+ */
 class Corredor implements Runnable {
     private int numeroCorredor;
     private Carrera carrera;

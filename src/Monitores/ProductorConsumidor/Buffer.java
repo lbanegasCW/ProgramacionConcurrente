@@ -3,6 +3,9 @@ package Monitores.ProductorConsumidor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Monitor del problema Productor-Consumidor con operaciones sincronizadas de agregar y consumir.
+ */
 class Buffer {
     private int size;
     private List<Integer> buffer;

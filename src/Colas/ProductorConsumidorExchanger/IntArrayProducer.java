@@ -3,6 +3,9 @@ package Colas.ProductorConsumidorExchanger;
 import java.util.Arrays;
 import java.util.concurrent.Exchanger;
 
+/**
+ * Productor para el ejemplo con Exchanger; intercambia su arreglo con el consumidor de forma atómica.
+ */
 class IntArrayProducer implements Runnable {
     private Exchanger<int[]> exchanger;
 

@@ -1,5 +1,8 @@
 package Monitores.ProductorConsumidor;
 
+/**
+ * Productor que genera datos y los deposita en el monitor Buffer respetando la sincronización.
+ */
 class Productor implements Runnable {
     private Buffer buffer;
 

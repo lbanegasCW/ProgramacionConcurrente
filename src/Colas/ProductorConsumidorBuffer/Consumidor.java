@@ -1,5 +1,8 @@
 package Colas.ProductorConsumidorBuffer;
 
+/**
+ * Consumidor que retira valores del Buffer sincronizado y muestra el estado acumulado de la suma.
+ */
 class Consumidor implements Runnable {
     private Buffer buffer;
 

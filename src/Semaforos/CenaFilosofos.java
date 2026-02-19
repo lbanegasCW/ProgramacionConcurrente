@@ -2,6 +2,9 @@ package Semaforos;
 
 import java.util.concurrent.Semaphore;
 
+/**
+ * Implementación del problema Cena de los Filósofos usando semáforos para modelar tenedores y acceso concurrente.
+ */
 public class CenaFilosofos {
     public static void main(String[] args) {
         int numFilosofos = 5;

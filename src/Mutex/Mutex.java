@@ -2,6 +2,9 @@ package Mutex;
 
 import java.time.Clock;
 
+/**
+ * Ejemplo principal de exclusión mutua: crea varios hilos que actualizan memoria compartida de forma segura.
+ */
 public class Mutex {
     private static final int KTHREADS = 3;
 

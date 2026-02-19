@@ -1,5 +1,8 @@
 package Hilos;
 
+/**
+ * Ejemplo de concurrencia con Runnable para mostrar el manejo de estado compartido en hilos.
+ */
 public class ValoresHilo implements Runnable {
     private final String nombre;
     private final int valor;

@@ -1,5 +1,8 @@
 package Monitores.ProductorConsumidor;
 
+/**
+ * Consumidor que espera datos en el monitor Buffer y acumula resultados.
+ */
 class Consumidor implements Runnable {
     private Buffer buffer;
     private int suma;

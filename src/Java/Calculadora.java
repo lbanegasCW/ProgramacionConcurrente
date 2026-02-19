@@ -2,6 +2,9 @@ package Java;
 
 import java.util.Scanner;
 
+/**
+ * Ejercicio base de Java orientado a operaciones con hilos para practicar estructura de ejecución concurrente.
+ */
 public class Calculadora {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);

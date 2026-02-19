@@ -1,5 +1,8 @@
 package Hilos;
 
+/**
+ * Ejemplo básico de creación de dos hilos para imprimir números pares e impares en paralelo.
+ */
 class NumeroParImpar {
     public static void main(String[] args) {
         Thread hiloPar = new Thread(() -> {
