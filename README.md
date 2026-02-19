@@ -1,31 +1,195 @@
-# README - Proyecto Java con Ejercicios de Concurrencia
+# Programación concurrente en Java
 
-¡Bienvenido al repositorio del proyecto de Java con ejercicios de concurrencia! En este repositorio encontrarás una colección de ejercicios y conceptos relacionados con la concurrencia en Java, organizados en siete directorios diferentes. A continuación, te proporcionamos una breve introducción a cada uno de los temas abordados en este proyecto.
+Este repositorio recopila ejemplos prácticos de concurrencia en Java. Ahora incluye:
 
-## Directorios
+1. **Teoría resumida de cada método/modelo de concurrencia** usado en el proyecto.
+2. **Un menú único** para ejecutar cualquier ejemplo sin navegar carpeta por carpeta.
 
-### 1. Ejercicios de Java
-En este directorio encontrarás una serie de ejercicios de programación en Java que cubren diversos temas. Estos ejercicios te permitirán practicar tus habilidades de programación y aplicar los conceptos que aprenderás en los demás directorios.
+---
 
-### 2. Hilos
-El directorio "Hilos" contiene ejemplos y explicaciones sobre el uso de hilos en Java. Aprenderás cómo crear y controlar hilos, sincronizar su ejecución y manejar problemas comunes asociados con la concurrencia.
+## Métodos de concurrencia explicados
 
-### 3. Mutex
-En el directorio "Mutex" encontrarás información y ejemplos relacionados con el uso de mutex en Java. Descubrirás cómo utilizarlos para garantizar la exclusión mutua y evitar condiciones de carrera en tus programas concurrentes.
+## 1) Hilos (Threads)
 
-### 4. Monitores
-En el directorio "Monitores" encontrarás información detallada sobre los monitores en Java. Aprenderás cómo utilizarlos para sincronizar el acceso a recursos compartidos y cómo implementar condiciones y operaciones atómicas utilizando monitores.
+### Idea
+Un hilo es una unidad de ejecución dentro de un proceso. Con varios hilos, una aplicación puede realizar tareas en paralelo lógico (o paralelo real si hay varios núcleos).
 
-### 5. Colas
-El directorio "Colas" se centra en el uso de colas concurrentes en Java. Aprenderás cómo utilizar estructuras de datos de cola concurrentes para compartir información entre hilos de manera segura y eficiente.
+### ¿Cómo se usa en Java?
+- Implementando `Runnable`.
+- Extendiendo `Thread`.
+- Arrancando con `start()`.
 
-### 6. Semáforos
-En el directorio "Semáforos" encontrarás ejemplos y explicaciones sobre el uso de semáforos en Java. Descubrirás cómo utilizarlos para controlar el acceso a recursos compartidos y coordinar la ejecución de múltiples hilos.
+### Ventajas
+- Modelo directo para empezar en concurrencia.
+- Fácil de entender para tareas simples.
 
-### 7. Executor Services
-El directorio "Executor Services" se enfoca en el uso de los servicios de ejecución en Java. Aprenderás cómo utilizar la interfaz Executor y sus implementaciones para administrar la ejecución de tareas en hilos de forma eficiente.
+### Riesgos
+- Condiciones de carrera si se comparten variables sin sincronización.
+- Dificultad para escalar cuando crece el número de hilos.
+
+### Ejemplos en este repo
+- `Hilos.NumeroParImpar`
+- `Hilos.ValoresHilo`
+- `Hilos.ValoresHiloThread`
+
+---
+
+## 2) Mutex (exclusión mutua)
+
+### Idea
+Un mutex protege una sección crítica: solo un hilo puede entrar a la vez. Sirve para evitar corrupción de datos compartidos.
+
+### ¿Cómo se usa en Java?
+- Con `synchronized` (bloqueo implícito).
+- Con clases como `ReentrantLock` (bloqueo explícito).
+
+### Ventajas
+- Evita condiciones de carrera en recursos compartidos.
+
+### Riesgos
+- Posibles bloqueos (deadlocks) si se adquieren locks en orden inconsistente.
+- Contención: demasiados hilos esperando por el mismo lock reduce rendimiento.
+
+### Ejemplo en este repo
+- `Mutex.Mutex`
+
+---
+
+## 3) Monitores
+
+### Idea
+Un monitor combina:
+- exclusión mutua, y
+- coordinación entre hilos con espera/notificación.
+
+### ¿Cómo se usa en Java?
+- Métodos/bloques `synchronized`.
+- `wait()`, `notify()`, `notifyAll()` para sincronizar estados.
+
+### Ventajas
+- Muy útil en patrones productor/consumidor.
+- Permite modelar estados de espera de forma controlada.
+
+### Riesgos
+- Errores sutiles si se usa `wait/notify` sin bucles de condición.
+- Notificaciones perdidas si la lógica no está bien diseñada.
+
+### Ejemplos en este repo
+- `Monitores.ProductorConsumidor.Main`
+- `Monitores.CarreraRelevos.Main`
+
+---
+
+## 4) Colas concurrentes
+
+### Idea
+Una cola desacopla productores y consumidores. Unos hilos agregan trabajo y otros lo procesan.
+
+### ¿Cómo se usa en Java?
+- `ArrayBlockingQueue` y otras `BlockingQueue`.
+- `Exchanger` para intercambio directo entre dos hilos.
+- Buffers propios sincronizados.
+
+### Ventajas
+- Diseño robusto para pipelines y procesamiento por lotes.
+- Reduce el acoplamiento entre hilos.
+
+### Riesgos
+- Elegir mal tamaño de buffer puede causar esperas innecesarias.
+- Si no se controla el ritmo, puede haber saturación de memoria/cola.
+
+### Ejemplos en este repo
+- `Colas.ProductorConsumidor.Main`
+- `Colas.ProductorConsumidorBuffer.Main`
+- `Colas.ProductorConsumidorExchanger.Main`
+
+---
+
+## 5) Semáforos
+
+### Idea
+Un semáforo mantiene un contador de permisos. Un hilo adquiere (`acquire`) y libera (`release`) permisos para entrar a una región o usar recursos limitados.
+
+### ¿Cómo se usa en Java?
+- `java.util.concurrent.Semaphore`.
+
+### Ventajas
+- Excelente para limitar concurrencia (por ejemplo, máximo N accesos simultáneos).
+- Útil en coordinación clásica como “cena de filósofos”.
+
+### Riesgos
+- Si no se liberan permisos correctamente, el sistema puede bloquearse.
+- Diseño incorrecto puede causar inanición de algunos hilos.
+
+### Ejemplo en este repo
+- `Semaforos.CenaFilosofos`
+
+---
+
+## 6) ExecutorService (pool de hilos)
+
+### Idea
+En lugar de crear hilos manualmente, se envían tareas a un pool administrado. Mejora control, reutilización y rendimiento.
+
+### ¿Cómo se usa en Java?
+- `ExecutorService` + `Executors.newFixedThreadPool(...)`.
+- Envío de tareas con `execute()` o `submit()`.
+- Cierre ordenado con `shutdown()` y `awaitTermination()`.
+
+### Ventajas
+- Escala mejor que crear hilos “a mano”.
+- Facilita control de recursos y ciclo de vida.
+
+### Riesgos
+- Si el pool es pequeño, puede convertirse en cuello de botella.
+- Si es demasiado grande, aumenta overhead y competencia por CPU.
+
+### Ejemplo en este repo
+- `ExecutorService.RandomNumberSum`
+
+---
+
+## 7) Ejercicios base de Java
+
+Estos ejemplos (`Java.Calculadora`, `Java.SumadorConArray`, `Java.SumaParesImpares`) ayudan a reforzar lógica y estructura general antes o durante el trabajo concurrente.
+
+---
+
+## Menú único para ejecutar demos
+
+Se agregó `MenuConcurrencia` para ejecutar cualquier ejemplo desde un solo punto.
+
+### Compilar
+
+```bash
+javac $(find src -name "*.java")
+```
+
+### Ejecutar menú
+
+```bash
+java -cp src MenuConcurrencia
+```
+
+El menú muestra opciones numeradas para cada demo y la opción `0` para salir.
+
+> Nota: Algunas demos pueden correr de forma continua; si quieres detenerlas, usa `Ctrl + C`.
+
+---
+
+## Estructura general
+
+- `src/Hilos`
+- `src/Mutex`
+- `src/Monitores`
+- `src/Colas`
+- `src/Semaforos`
+- `src/ExecutorService`
+- `src/Java`
+- `src/MenuConcurrencia.java` (nuevo launcher)
+
+---
 
 ## Contribuir
-¡Nos encantaría recibir contribuciones de la comunidad! Si deseas agregar nuevos ejercicios, mejorar la documentación existente o proporcionar ejemplos adicionales, no dudes en hacerlo. Simplemente realiza un fork del repositorio, realiza tus cambios y envía una solicitud de extracción. Agradecemos cualquier tipo de ayuda para mejorar este proyecto y hacerlo aún más útil para otros desarrolladores interesados en la concurrencia en Java.
 
-Esperamos que este repositorio y su contenido te resulten útiles y te ayuden a mejorar tus habilidades en el desarrollo de aplicaciones concurrentes en Java. ¡Disfruta explorando los ejercicios y conceptos aquí presentes!
+Si quieres agregar más modelos (por ejemplo `CompletableFuture`, `ForkJoinPool`, o programación reactiva), puedes extender tanto los ejemplos como el menú central.
