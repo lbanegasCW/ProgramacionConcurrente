@@ -25,6 +25,10 @@ En el directorio "Semáforos" encontrarás ejemplos y explicaciones sobre el uso
 ### 7. Executor Services
 El directorio "Executor Services" se enfoca en el uso de los servicios de ejecución en Java. Aprenderás cómo utilizar la interfaz Executor y sus implementaciones para administrar la ejecución de tareas en hilos de forma eficiente.
 
+## Screenshot
+
+<img width="459" height="454" alt="image" src="https://github.com/user-attachments/assets/6263f6f7-6601-4627-a3cf-4967b9140d72" />
+
 ## Contribuir
 ¡Nos encantaría recibir contribuciones de la comunidad! Si deseas agregar nuevos ejercicios, mejorar la documentación existente o proporcionar ejemplos adicionales, no dudes en hacerlo. Simplemente realiza un fork del repositorio, realiza tus cambios y envía una solicitud de extracción. Agradecemos cualquier tipo de ayuda para mejorar este proyecto y hacerlo aún más útil para otros desarrolladores interesados en la concurrencia en Java.
 
